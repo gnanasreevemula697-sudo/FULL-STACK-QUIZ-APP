@@ -1,0 +1,93 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import "../styles/style.css";
+
+function Result() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const data = location.state;
+
+  if (!data) {
+    return (
+      <div className="container">
+        <h1 className="title">📊 Quiz Result</h1>
+        <div className="quiz-card status-card">
+          <p className="status-text">No result found. Please take the quiz first.</p>
+          <button className="submit-btn" onClick={() => navigate("/")}>
+            Go Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const score = data?.score || 0;
+  const totalQuestions = data?.totalQuestions || 0;
+  const results = data?.results || [];
+
+  const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+  const wrongCount = totalQuestions - score;
+
+  return (
+    <div className="container">
+      <h1 className="title">🎉 Quiz Result</h1>
+
+      <div className="quiz-card">
+        <div className="score-summary">
+          <div className="score-large">
+            {score} <span>/ {totalQuestions}</span>
+          </div>
+          <div className="score-percent">{percentage}%</div>
+          <div className="score-stats">
+            <span className="stat stat-correct">✅ Correct: {score}</span>
+            <span className="stat stat-wrong">❌ Wrong: {wrongCount}</span>
+          </div>
+          <div className="score-message">
+            {percentage >= 80 && "🌟 Excellent! Great job!"}
+            {percentage >= 50 && percentage < 80 && "👍 Good effort! Keep practicing."}
+            {percentage < 50 && "📚 Keep learning! Try again."}
+          </div>
+        </div>
+      </div>
+
+      {results.map((item) => (
+        <div
+          key={item.id}
+          className={`quiz-card result-card ${item.correct ? "result-correct" : "result-wrong"}`}
+        >
+          <div className="result-question">
+            <span className="result-status">{item.correct ? "✅ Correct" : "❌ Wrong"}</span>
+            <h3>{item.question}</h3>
+          </div>
+
+          <p>
+            <strong>Your Answer:</strong>{" "}
+            <span className={item.correct ? "answer-good" : "answer-bad"}>{item.userAnswer}</span>
+          </p>
+
+          {!item.correct && (
+            <p>
+              <strong>Correct Answer:</strong>{" "}
+              <span className="answer-good">{item.correctAnswer}</span>
+            </p>
+          )}
+
+          <p>
+            <strong>Explanation:</strong> {item.explanation}
+          </p>
+        </div>
+      ))}
+
+      <div className="result-actions">
+        <button className="submit-btn" onClick={() => navigate("/")}>
+          🔄 Try Again
+        </button>
+        <button className="prev-btn" onClick={() => navigate("/")}>
+          🏠 Go Home
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default Result;

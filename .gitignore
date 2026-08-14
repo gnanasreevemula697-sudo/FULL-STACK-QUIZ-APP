@@ -1,0 +1,22 @@
+# Frontend
+quiz-frontend/node_modules/
+quiz-frontend/build/
+quiz-frontend/.env
+
+# Backend
+quiz-backend/target/
+quiz-backend/.env
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+
+# Logs
+*.log
