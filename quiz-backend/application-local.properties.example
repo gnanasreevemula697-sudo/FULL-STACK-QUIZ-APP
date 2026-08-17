@@ -1,25 +1,20 @@
 # ============================================================
-# LOCAL DEVELOPMENT CONFIG (DO NOT COMMIT application-local.properties)
+# QUIZ APPLICATION - DATABASE CONFIGURATION
 # ============================================================
-# Copy this file to application-local.properties and fill in YOUR values.
-# application-local.properties is gitignored, so your secrets stay local.
-#
-# Run the backend with the local profile:
-#   ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-#   (Windows: mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local")
 
-# --- MySQL ---
-spring.datasource.url=jdbc:mysql://localhost:3306/quizdb
-spring.datasource.username=root
-spring.datasource.password=YOUR_MYSQL_PASSWORD_HERE
+# MySQL Database
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/quizdb}
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD:}
 
-# --- Admin login credentials ---
-admin.username=admin
-admin.password=YOUR_ADMIN_PASSWORD_HERE
+# JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
 
-# Alternatively, set these as environment variables and use the default profile:
-#   DB_URL=jdbc:mysql://localhost:3306/quizdb
-#   DB_USERNAME=root
-#   DB_PASSWORD=your-db-password
-#   ADMIN_USERNAME=admin
-#   ADMIN_PASSWORD=your-admin-password
+# Admin Login
+admin.username=${ADMIN_USERNAME:admin}
+admin.password=${ADMIN_PASSWORD:}
+
+# Server
+server.port=${PORT:8080}

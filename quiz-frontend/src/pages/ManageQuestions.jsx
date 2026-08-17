@@ -82,7 +82,7 @@ function ManageQuestions() {
   return (
     <div className="container">
       <h1 className="title">📋 Manage Questions</h1>
-      <p className="text-center text-white">Manage and organize your quiz questions</p>
+      <p className="text-center text-secondary">Manage and organize your quiz questions</p>
 
       <div className="quiz-card">
         {message.text && <div className={`alert alert-${message.type}`}>{message.text}</div>}
@@ -127,25 +127,33 @@ function ManageQuestions() {
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {questions.map((q) => (
-                  <tr key={q.id}>
-                    <td>{q.id}</td>
-                    <td style={{ maxWidth: 420 }}>{q.question}</td>
-                        <td>
-                          <span className="badge-category">{q.category?.name || "Uncategorized"}</span>
-                        </td>
-                    <td>{q.correctAnswer}</td>
-                    <td>
-                      <div className="d-flex gap-2 flex-wrap">
-                            <Link to={`/admin/edit-question/${q.id}`} className="btn btn-primary btn-sm">Edit</Link>
-                        <button className="btn btn-danger btn-sm" onClick={() => deleteQuestion(q.id)}>
-                          Delete
-                        </button>
-                      </div>
+               <tbody>
+                {questions.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center", padding: "24px", color: "var(--muted)" }}>
+                      No questions found. Add a new question or adjust the filters.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  questions.map((q) => (
+                    <tr key={q.id}>
+                      <td>{q.id}</td>
+                      <td style={{ maxWidth: 420 }}>{q.question}</td>
+                      <td>
+                        <span className="badge-category">{q.category?.name || "Uncategorized"}</span>
+                      </td>
+                      <td>{q.correctAnswer}</td>
+                      <td>
+                        <div className="d-flex gap-2 flex-wrap">
+                          <Link to={`/admin/edit-question/${q.id}`} className="btn btn-primary btn-sm">Edit</Link>
+                          <button className="btn btn-danger btn-sm" onClick={() => deleteQuestion(q.id)}>
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
             </div>

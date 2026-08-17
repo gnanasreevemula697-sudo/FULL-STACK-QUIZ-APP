@@ -17,7 +17,6 @@ import com.quiz.quizbackend.entity.Category;
 import com.quiz.quizbackend.service.CategoryService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/category")
 public class CategoryController {
 

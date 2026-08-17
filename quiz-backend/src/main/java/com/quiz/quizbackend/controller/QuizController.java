@@ -11,7 +11,6 @@ import com.quiz.quizbackend.entity.QuizResult;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("quiz")
 public class QuizController {
 

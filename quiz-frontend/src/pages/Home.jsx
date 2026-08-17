@@ -106,7 +106,7 @@ function Home() {
         </div>
 
         <div className="nav-right">
-          {/* Admin Portal link intentionally hidden from public Home page */}
+          <button className="btn-admin" onClick={() => navigate("/admin")}>Admin Portal</button>
         </div>
       </header>
 
@@ -127,6 +127,7 @@ function Home() {
       </div>
 
       {/* Landing / Category Selection */}
+      {error && <div className="alert alert-danger text-center">{error}</div>}
       {loadingCategories ? (
         <div className="quiz-card text-center">Loading categories...</div>
       ) : categories.length === 0 ? (

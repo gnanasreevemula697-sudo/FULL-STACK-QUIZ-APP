@@ -244,19 +244,39 @@ function ManageCategories() {
           <div className="category-grid">
             {categories.map((category) => (
               <div key={category.id} className="category-card quiz-card">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ fontSize: 28 }}>{getCategoryIcon(category.name)}</div>
-                  <div>
-                    <h4 style={{ margin: 0 }}>{category.name}</h4>
-                    <div className="text-muted">{category.questionCount || 0} Questions</div>
+                {editingId === category.id ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+                    <div>
+                      <label className="form-label">Edit Category Name</label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                      />
+                    </div>
+                    <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+                      <button className="btn btn-primary" onClick={() => handleUpdateCategory(category.id)}>Save</button>
+                      <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ fontSize: 28 }}>{getCategoryIcon(category.name)}</div>
+                      <div>
+                        <h4 style={{ margin: 0 }}>{category.name}</h4>
+                        <div className="text-muted">{category.questionCount || 0} Questions</div>
+                      </div>
+                    </div>
 
-                <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-                  <Link to={`/admin/manage?categoryId=${category.id}`} className="btn btn-outline-primary">View Questions</Link>
-                  <button className="btn btn-warning" onClick={() => startEdit(category)}>✏️ Edit</button>
-                  <button className="btn btn-danger" onClick={() => handleDeleteCategory(category.id)}>🗑️ Delete</button>
-                </div>
+                    <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+                      <Link to={`/admin/manage?categoryId=${category.id}`} className="btn btn-outline-primary">View Questions</Link>
+                      <button className="btn btn-warning" onClick={() => startEdit(category)}>✏️ Edit</button>
+                      <button className="btn btn-danger" onClick={() => handleDeleteCategory(category.id)}>🗑️ Delete</button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>

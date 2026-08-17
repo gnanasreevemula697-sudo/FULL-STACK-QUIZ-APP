@@ -17,7 +17,6 @@ import com.quiz.quizbackend.entity.Question;
 import com.quiz.quizbackend.service.QuestionService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/question")
 public class QuestionController {
 
@@ -27,6 +26,11 @@ public class QuestionController {
     @GetMapping("/allQuestions")
     public List<Question> getAllQuestions() {
         return questionService.getAllQuestions();
+    }
+
+    @GetMapping("/{id}")
+    public Question getQuestionById(@PathVariable int id) {
+        return questionService.getQuestionById(id);
     }
 
     @GetMapping("/category/{categoryId}")

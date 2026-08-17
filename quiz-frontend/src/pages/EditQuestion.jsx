@@ -16,15 +16,14 @@ function EditQuestion() {
     const load = async () => {
       try {
         setLoading(true);
-        const [catsRes, questionsRes] = await Promise.all([
+        const [catsRes, questionRes] = await Promise.all([
           api.get("/category/all"),
-          api.get("/question/allQuestions"),
+          api.get(`/question/${id}`),
         ]);
 
         setCategories(catsRes.data || []);
 
-        const qList = questionsRes.data || [];
-        const found = qList.find((q) => String(q.id) === String(id));
+        const found = questionRes.data;
         if (!found) {
           setMessage({ type: "danger", text: "Question not found." });
           return;

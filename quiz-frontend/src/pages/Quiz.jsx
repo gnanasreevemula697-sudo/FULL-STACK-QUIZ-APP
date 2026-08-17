@@ -50,7 +50,7 @@ function Quiz() {
   useEffect(() => {
     if (!questions.length) return;
     if (timeLeft <= 0) {
-      handleSubmit();
+      handleSubmit(true);
       return;
     }
     const t = setInterval(() => setTimeLeft((p) => p - 1), 1000);
@@ -67,13 +67,21 @@ function Quiz() {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (isTimeExpired = false) => {
     if (submitting) return;
-    const responses = Object.keys(answers).map((id) => ({ id: Number(id), response: answers[id] }));
-    if (responses.length < questions.length) {
-      setError("Please answer every question before submitting.");
-      return;
+
+    if (!isTimeExpired) {
+      const unanswered = questions.some((q) => !answers[q.id]);
+      if (unanswered) {
+        setError("Please answer every question before submitting.");
+        return;
+      }
     }
+
+    const responses = questions.map((q) => ({
+      id: q.id,
+      response: answers[q.id] || "",
+    }));
 
     try {
       setSubmitting(true);

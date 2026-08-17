@@ -152,7 +152,7 @@ function AddQuestion() {
   return (
     <div className="container">
       <h1 className="title">➕ Add New Question</h1>
-      <p className="text-center text-white">Create a question and assign it to a category.</p>
+      <p className="text-center text-secondary">Create a question and assign it to a category.</p>
 
       <form className="quiz-card" onSubmit={handleSubmit}>
         {message.text && (
