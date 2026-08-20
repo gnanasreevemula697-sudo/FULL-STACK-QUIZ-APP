@@ -105,9 +105,7 @@ function Home() {
           </nav>
         </div>
 
-        <div className="nav-right">
-          <button className="btn-admin" onClick={() => navigate("/admin")}>Admin Portal</button>
-        </div>
+      
       </header>
 
       <div className="mb-4" ref={heroRef}>
