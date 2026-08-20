@@ -1,70 +1,328 @@
-# Getting Started with Create React App
+# 🧠 QuizMaster — Full-Stack Quiz Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+QuizMaster is a modern full-stack online quiz platform where users can test their knowledge across multiple categories.
 
-## Available Scripts
+The application provides an interactive quiz experience with category-based quizzes, timed assessments, instant results, and an administration interface for managing quiz content.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 👨‍🎓 User Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🏠 Interactive Home Page
+- 📚 Multiple Quiz Categories
+- 🎯 Category-based Quizzes
+- ❓ Dynamic Questions loaded from the backend
+- ⏱️ 2-Minute Quiz Timer
+- 🔄 Timer continues across questions without resetting
+- ⚡ Automatic submission when the timer reaches `00:00`
+- ✅ Answer selection
+- ◀️ Previous Question navigation
+- ▶️ Next Question navigation
+- 🔢 Question navigation
+- 📊 Quiz progress tracking
+- 🏆 Instant Quiz Results
+- 📈 Score and percentage display
+- 🔁 Try Again functionality
+- 🏠 Home and Categories navigation
+- 📱 Responsive design for desktop, tablet and mobile
 
-### `npm test`
+### 🔐 Admin Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application includes a separate Admin interface for managing quiz content.
 
-### `npm run build`
+Admin functionality includes:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 📂 Category management
+- ➕ Add categories
+- ✏️ Update categories
+- 🗑️ Delete categories
+- ❓ Question management
+- ➕ Add questions
+- ✏️ Update questions
+- 🗑️ Delete questions
+- 📋 Manage quiz content
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The Admin page can be accessed directly through:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`/admin`
 
-### `npm run eject`
+The Admin Portal link is intentionally hidden from the normal user navigation.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🎨 UI / UX
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+QuizMaster uses a clean and professional quiz-focused interface.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Design Highlights
 
-## Learn More
+- Modern dark-themed interface
+- Clean card-based layout
+- Consistent spacing and alignment
+- Interactive buttons and quiz options
+- Clear question progress
+- Timer visual states
+- Responsive layouts
+- Mobile-friendly quiz experience
+- Accessible interactive elements
+- Smooth and subtle UI interactions
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The application focuses on usability rather than excessive visual effects.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## ⏱️ Quiz Timer
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Each quiz has a total time limit of:
 
-### Analyzing the Bundle Size
+**2 Minutes**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Timer format:
 
-### Making a Progressive Web App
+```text
+02:00
+01:59
+01:58
+...
+00:00
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+##Timer Behavior
 
-### Advanced Configuration
+Timer starts when the quiz begins.
+Timer does not reset when navigating between questions.
+Only one timer interval is maintained.
+Timer is cleaned up when the quiz component is unmounted.
+Duplicate submissions are prevented.
+The quiz is automatically submitted when the timer reaches 00:00.
+Timer States
+Time	State
+02:00 – 00:31	Normal
+00:30 – 00:11	Warning
+00:10 – 00:00	Critical
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+##🏗️ Project Architecture
 
-### Deployment
+QuizMaster follows a separated full-stack architecture.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+QuizMaster
+│
+├── React Frontend
+│   │
+│   ├── Home
+│   ├── Quiz
+│   ├── Result
+│   ├── Admin
+│   └── Responsive UI
+│
+├── Spring Boot Backend
+│   │
+│   ├── REST APIs
+│   ├── Controllers
+│   ├── Services
+│   ├── Repositories
+│   └── JPA Entities
+│
+└── MySQL Database
 
-### `npm run build` fails to minify
+## 🛠️ Technology Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Frontend:
+    React
+    React Router
+    Axios
+    JavaScript
+    HTML5
+    CSS3
+    Create React App:
+## Backend:
+    Java
+    Spring Boot
+    Spring Data JPA
+    Hibernate
+    REST APIs
+    Maven
+    Database
+    MySQL
+
+## 🔌 API Configuration
+
+The frontend uses a centralized Axios configuration.
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:8085",
+});
+
+This allows the application to use:
+
+Local backend during development
+Environment-based backend configuration in deployment
+
+The production backend URL is not hardcoded into the React source code.
+
+## 🗄️ Database
+
+The application uses MySQL as its database.
+
+The backend uses Spring Data JPA/Hibernate to communicate with the database.
+
+The database contains the data required for:
+
+Quiz categories
+Questions
+Quiz content
+
+Database configuration is maintained in the backend and is not hardcoded into the React frontend.
+
+## 🔄 Application Flow
+User
+ │
+ ▼
+Home Page
+ │
+ ▼
+Select Quiz Category
+ │
+ ▼
+Load Questions from Spring Boot API
+ │
+ ▼
+Start 2-Minute Quiz
+ │
+ ▼
+Answer Questions
+ │
+ ├── Previous
+ ├── Next
+ └── Question Navigation
+ │
+ ▼
+Submit Quiz
+ │
+ ▼
+Result Page
+ │
+ ├── Score
+ ├── Percentage
+ ├── Correct Answers
+ ├── Wrong Answers
+ └── Unanswered
+ │
+ ▼
+Try Again / Categories / Home
+
+## 🔐 Admin Flow
+/admin
+   │
+   ▼
+Admin Page
+   │
+   ├── Manage Categories
+   │      ├── Add
+   │      ├── Update
+   │      └── Delete
+   │
+   └── Manage Questions
+          ├── Add
+          ├── Update
+          └── Delete
+The Admin route is available directly at:
+
+/admin
+
+The Admin Portal link is not displayed in the normal user navigation.
+
+## 📱 Responsive Design
+
+QuizMaster is designed to work across:
+
+💻 Desktop
+📱 Mobile
+📲 Tablet
+
+The interface adapts to different screen sizes while maintaining:
+
+Readable question text
+Touch-friendly answer options
+Proper button spacing
+Responsive category cards
+Responsive admin layouts
+No unnecessary horizontal scrolling
+
+## 🌐 Deployment Architecture
+
+The application uses a separated deployment architecture:
+                    ┌─────────────────────┐
+                    │   React Frontend    │
+                    │    Static Site      │
+                    └──────────┬──────────┘
+                               │
+                               │ REST API
+                               ▼
+                    ┌─────────────────────┐
+                    │   Spring Boot      │
+                    │      Backend       │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │       MySQL         │
+                    │      Database       │
+                    └─────────────────────┘
+Frontend and backend are deployed separately.
+
+Environment-based API configuration is used so that the backend URL does not need to be hardcoded into the frontend source code.
+
+## 🛡️ Error Handling
+
+The frontend provides handling for common application states such as:
+
+Loading categories
+Loading quiz questions
+Empty categories
+API failures
+Quiz submission states
+Empty question states
+Admin errors
+
+The application avoids using browser alerts for normal quiz interactions.
+
+## ⚡ Performance
+
+The application focuses on lightweight frontend performance by:
+
+Using React hooks appropriately
+Avoiding unnecessary dependencies
+Cleaning up quiz timers
+Avoiding duplicate timer intervals
+Using centralized Axios configuration
+Using optimized production builds
+
+## 🔮 Future Improvements
+
+Possible future enhancements include:
+
+User authentication
+Quiz history
+Leaderboard
+Difficulty-based quizzes
+User profiles
+Advanced analytics
+Question randomization
+More detailed performance reports
+
+
+👨‍💻 Development
+
+This project was developed as a full-stack quiz application demonstrating:
+
+React frontend development
+REST API integration
+Spring Boot backend development
+MySQL database integration
+CRUD operations
+Responsive UI design
+State management
+Timed quiz logic
+Production deployment
