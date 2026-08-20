@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import "../styles/style.css";
 
 function ManageQuestions() {
+  const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [searchParams] = useSearchParams();
@@ -71,13 +72,12 @@ function ManageQuestions() {
 
   // Read message from navigation state (e.g., after edit)
   useEffect(() => {
-    const state = window.history.state && window.history.state.usr;
-    if (state && state.message) {
-      setMessage({ type: "success", text: state.message });
+    if (location.state?.message) {
+      setMessage({ type: "success", text: location.state.message });
       // clear the history state message to avoid repetition
       window.history.replaceState({}, document.title);
     }
-  }, []);
+  }, [location.state]);
 
   return (
     <div className="container">

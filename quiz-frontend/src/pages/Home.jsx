@@ -20,9 +20,28 @@ function Home() {
   const [error, setError] = useState("");
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState("hero");
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    setIsAdmin(localStorage.getItem("quizAdminAuth") === "true");
+  }, [location]);
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const target = location.state.scrollTo;
+      setTimeout(() => {
+        if (target === "hero") scrollToRef(heroRef);
+        if (target === "categories") scrollToRef(categoryRef);
+        if (target === "about") scrollToRef(aboutRef);
+      }, 180);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
   const categoryRef = useRef(null);
   const heroRef = useRef(null);
   const aboutRef = useRef(null);
@@ -37,6 +56,7 @@ function Home() {
   };
 
   const handleNav = (target) => {
+    setActiveTab(target);
     // If already on home route, just scroll. Otherwise navigate to home then scroll after short delay.
     if (location.pathname === "/") {
       if (target === "hero") scrollToRef(heroRef);
@@ -51,6 +71,13 @@ function Home() {
       if (target === "categories") scrollToRef(categoryRef);
       if (target === "about") scrollToRef(aboutRef);
     }, 180);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("quizAdminAuth");
+    localStorage.removeItem("quizAdminToken");
+    setIsAdmin(false);
+    navigate("/");
   };
 
 
@@ -95,17 +122,22 @@ function Home() {
 
   return (
     <div className="container">
-      <header className="navbar">
-        <div className="nav-left">
+      <header className="navbar" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <div className="nav-left" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
           <div className="brand" style={{ cursor: 'pointer' }} onClick={() => handleNav('hero')}>🧠 QuizMaster</div>
-          <nav className="nav-links">
-            <button className="nav-link-btn" onClick={() => handleNav('hero')}>Home</button>
-            <button className="nav-link-btn" onClick={() => handleNav('categories')}>Categories</button>
-            <button className="nav-link-btn" onClick={() => handleNav('about')}>About</button>
-          </nav>
+          
+          <button className="menu-toggle-btn" aria-label="Toggle menu" style={{ display: 'none', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }} onClick={() => setMenuOpen(!menuOpen)}>
+            ☰
+          </button>
         </div>
+        
+        <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
+          <button className={`nav-link-btn ${activeTab === 'hero' ? 'active' : ''}`} onClick={() => { setMenuOpen(false); handleNav('hero'); }}>Home</button>
+          <button className={`nav-link-btn ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => { setMenuOpen(false); handleNav('categories'); }}>Categories</button>
+          <button className={`nav-link-btn ${activeTab === 'about' ? 'active' : ''}`} onClick={() => { setMenuOpen(false); handleNav('about'); }}>About</button>
+        </nav>
 
-      
+        
       </header>
 
       <div className="mb-4" ref={heroRef}>
@@ -118,8 +150,15 @@ function Home() {
               <button className="cta-explore" onClick={() => handleNav('categories')}>Explore Quizzes →</button>
             </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <img src="/static/media/quiz-illustration.0f3d3b2f.svg" alt="quiz" style={{ maxWidth: 240, opacity: 0.95 }} onError={(e)=>{ e.target.style.display='none'; }} />
+          <div style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.95 }}>
+              <rect x="40" y="40" width="120" height="130" rx="10" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="4" />
+              <rect x="60" y="70" width="80" height="12" rx="4" fill="#F1F5F9" />
+              <rect x="60" y="100" width="80" height="12" rx="4" fill="#F1F5F9" />
+              <rect x="60" y="130" width="50" height="12" rx="4" fill="#F1F5F9" />
+              <circle cx="150" cy="50" r="25" fill="var(--primary-light)" />
+              <path d="M150 38V48M145 43H155M143 55L147 52L150 55L157 48" stroke="var(--primary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
         </div>
       </div>
@@ -127,7 +166,10 @@ function Home() {
       {/* Landing / Category Selection */}
       {error && <div className="alert alert-danger text-center">{error}</div>}
       {loadingCategories ? (
-        <div className="quiz-card text-center">Loading categories...</div>
+        <div className="quiz-card text-center" style={{ padding: '40px 0' }}>
+          <div className="spinner" style={{ marginBottom: 12 }}></div>
+          <div>Loading categories...</div>
+        </div>
       ) : categories.length === 0 ? (
         <div className="quiz-card text-center">
           <h3>No categories available.</h3>
@@ -193,10 +235,10 @@ function Home() {
               </div>
             </div>
             <div className="feature-card">
-              <div className="feature-emoji">🎯</div>
+              <div className="feature-emoji">⏱️</div>
               <div>
-                <h4>Easy to Use</h4>
-                <p className="small-muted">A simple, focused interface for learning and improving.</p>
+                <h4>Timed Challenges</h4>
+                <p className="small-muted">Complete the quiz within the 2-minute time limit.</p>
               </div>
             </div>
           </div>

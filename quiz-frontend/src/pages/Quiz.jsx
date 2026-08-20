@@ -11,10 +11,14 @@ function Quiz() {
   const [categoryName, setCategoryName] = useState("");
   const [answers, setAnswers] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes total
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Keep a ref to handleSubmit to avoid closure stale state in the interval
+  const currentSubmitRef = { current: null };
 
   useEffect(() => {
     let mounted = true;
@@ -47,16 +51,26 @@ function Quiz() {
     return () => { mounted = false; };
   }, [categoryId]);
 
+  // Main single interval timer hook
   useEffect(() => {
-    if (!questions.length) return;
-    if (timeLeft <= 0) {
-      handleSubmit(true);
-      return;
-    }
-    const t = setInterval(() => setTimeLeft((p) => p - 1), 1000);
-    return () => clearInterval(t);
+    if (loading || !questions.length) return;
+    
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          if (currentSubmitRef.current) {
+            currentSubmitRef.current(true);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, questions.length]);
+  }, [loading, questions.length]);
 
   const progressPercent = useMemo(() => {
     if (!questions.length) return 0;
@@ -88,7 +102,8 @@ function Quiz() {
       setError("");
       const res = await api.post(`/quiz/submitDetails/${categoryId}`, responses);
       // include categoryId so Result can retake same quiz
-      const payload = { ...res.data, categoryId, categoryName };
+      const timeUsed = 120 - timeLeft;
+      const payload = { ...res.data, categoryId, categoryName, timeUsed };
       navigate("/result", { state: payload });
     } catch (err) {
       console.error(err);
@@ -97,6 +112,8 @@ function Quiz() {
       setSubmitting(false);
     }
   };
+
+  currentSubmitRef.current = handleSubmit;
 
   if (loading) {
     return (
@@ -124,12 +141,32 @@ function Quiz() {
 
   return (
     <div className="container quiz-container">
-      <header className="navbar">
-        <div className="nav-left">
+      <header className="navbar" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <div className="nav-left" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
           <div className="brand" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>🧠 QuizMaster</div>
-          <nav className="nav-links">
-            <button className="nav-link-btn" onClick={() => navigate('/')}>Home</button>
-          </nav>
+          
+          <button className="menu-toggle-btn" aria-label="Toggle menu" style={{ display: 'none', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }} onClick={() => setMenuOpen(!menuOpen)}>
+            ☰
+          </button>
+        </div>
+        
+        <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
+          <button className="nav-link-btn" onClick={() => navigate('/')}>Home</button>
+        </nav>
+
+        <div className={`nav-right ${menuOpen ? 'show' : ''}`}>
+          {localStorage.getItem("quizAdminAuth") === "true" ? (
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button className="btn-admin" onClick={() => navigate('/admin/dashboard')}>Dashboard</button>
+              <button className="prev-btn" style={{ padding: '8px 14px' }} onClick={() => {
+                localStorage.removeItem("quizAdminAuth");
+                localStorage.removeItem("quizAdminToken");
+                navigate('/');
+              }}>Logout</button>
+            </div>
+          ) : (
+            <button className="btn-admin" onClick={() => navigate('/admin')}>Admin Portal</button>
+          )}
         </div>
       </header>
 
@@ -141,11 +178,38 @@ function Quiz() {
 
         <div className="question-info" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
           <div className="small-muted">Question {currentQuestion + 1} of {questions.length}</div>
-          <div className="timer">⏰ {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2,'0')}</div>
+          <div className={`timer ${timeLeft <= 10 ? 'critical' : (timeLeft <= 30 ? 'warning' : '')}`}>
+            ⏰ {Math.floor(timeLeft / 60).toString().padStart(2, '0')}:{(timeLeft % 60).toString().padStart(2,'0')}
+          </div>
         </div>
 
         <div className="progress" style={{ marginTop: 10 }}>
           <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
+        </div>
+
+        {/* Question Palette Navigation Grid */}
+        <div className="palette-container" style={{ marginBottom: 16 }}>
+          <div className="palette-title">Question Palette</div>
+          <div className="palette-grid">
+            {questions.map((question, idx) => {
+              let statusClass = "";
+              if (idx === currentQuestion) statusClass = "current";
+              else if (answers[question.id]) statusClass = "answered";
+              
+              return (
+                <button
+                  key={question.id}
+                  className={`palette-btn ${statusClass}`}
+                  onClick={() => {
+                    setError('');
+                    setCurrentQuestion(idx);
+                  }}
+                >
+                  {idx + 1}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {error && <div className="alert alert-danger" style={{ marginTop: 10 }}>{error}</div>}
@@ -185,7 +249,7 @@ function Quiz() {
                 setCurrentQuestion((p) => p + 1);
               }}>Next →</button>
             ) : (
-              <button className="submit-btn" onClick={handleSubmit} disabled={submitting}>{submitting ? 'Submitting...' : '✅ Submit Quiz'}</button>
+              <button className="submit-btn" onClick={() => handleSubmit(false)} disabled={submitting}>{submitting ? 'Submitting...' : '✅ Submit Quiz'}</button>
             )}
           </div>
         </div>
