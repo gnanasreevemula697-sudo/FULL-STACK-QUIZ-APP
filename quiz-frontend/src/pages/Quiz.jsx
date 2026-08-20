@@ -155,7 +155,7 @@ function Quiz() {
         </nav>
 
         <div className={`nav-right ${menuOpen ? 'show' : ''}`}>
-          {localStorage.getItem("quizAdminAuth") === "true" ? (
+          {localStorage.getItem("quizAdminAuth") === "true" && (
             <div style={{ display: 'flex', gap: 10 }}>
               <button className="btn-admin" onClick={() => navigate('/admin/dashboard')}>Dashboard</button>
               <button className="prev-btn" style={{ padding: '8px 14px' }} onClick={() => {
@@ -164,8 +164,6 @@ function Quiz() {
                 navigate('/');
               }}>Logout</button>
             </div>
-          ) : (
-            <button className="btn-admin" onClick={() => navigate('/admin')}>Admin Portal</button>
           )}
         </div>
       </header>

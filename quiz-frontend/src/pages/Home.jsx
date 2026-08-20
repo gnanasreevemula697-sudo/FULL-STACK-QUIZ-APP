@@ -21,15 +21,10 @@ function Home() {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [activeTab, setActiveTab] = useState("hero");
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    setIsAdmin(localStorage.getItem("quizAdminAuth") === "true");
-  }, [location]);
 
   useEffect(() => {
     if (location.state?.scrollTo) {
@@ -73,12 +68,7 @@ function Home() {
     }, 180);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("quizAdminAuth");
-    localStorage.removeItem("quizAdminToken");
-    setIsAdmin(false);
-    navigate("/");
-  };
+
 
 
 
